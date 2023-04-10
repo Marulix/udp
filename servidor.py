@@ -47,7 +47,7 @@ def handle_client_request(client_address, filename, num_cliente, nombreLog):
 def main():
     # set up the TCP server socket
     tcp_server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    tcp_server_address = ('127.0.0.1', 12345)
+    tcp_server_address = ('192.168.89.131', 12345)
     tcp_server_socket.bind(tcp_server_address)
     tcp_server_socket.listen()
 
@@ -76,7 +76,7 @@ def main():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     # set up the server address and port
-    server_address = ('127.0.0.1', 12345)
+    server_address = ('192.168.89.131', 12345)
     server_socket.bind(server_address)
 
     # listen for incoming UDP requests
