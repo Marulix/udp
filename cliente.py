@@ -7,7 +7,6 @@ import time
 MAX_PACKET_SIZE = 2048
 lock = threading.Lock()
 
-# function to handle logs
 def log(cliente, tiempo, nombreLog, tamanio_final, exito):
     texto = ["Conexión del cliente {} \n Tiempo de transferencia: {}s \n Tamaño final: {}MB \n Éxito: {}\n".format(cliente, tiempo, tamanio_final, exito) ]
     lock.acquire()
@@ -17,25 +16,21 @@ def log(cliente, tiempo, nombreLog, tamanio_final, exito):
     lock.release() 
 
 def client(filename, request, nombre_log, num_cliente):
-    # set up the UDP client socket
     udp_client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     udp_client_socket.settimeout(10)
     server_address = ('192.168.89.131', 12345)
     udp_client_socket.sendto(request.encode(), server_address)
 
-    # Open the file to write the received data
     if not os.path.exists("Archivos Recibidos"):
         os.makedirs("Archivos Recibidos")
     file = open("Archivos Recibidos\ ".strip() + filename, 'wb')
 
-    # Loop over the incoming data and write it to the file
     start = time.time()
     success = True
     while True:
         try:
             data, server_address = udp_client_socket.recvfrom(MAX_PACKET_SIZE)
         except socket.timeout:
-            #print("Connection timed out for {}".format(filename))
             success = False
             file.close()
             break
@@ -48,7 +43,6 @@ def client(filename, request, nombre_log, num_cliente):
     print('File received from {}:{}'.format(server_address[0], server_address[1]))
     tamanio_final = int(os.path.getsize("Archivos Recibidos\ ".strip() + filename))/1000000
     log(num_cliente, round(tiempo, 2), nombre_log, tamanio_final, success)
-    # close the UDP client socket
     udp_client_socket.close()
 
 
@@ -67,15 +61,13 @@ def main():
 
     numClientes = int(input("Ingrese el numero de clientes: "))
 
-    # set up the TCP client socket and connect to the server
     tcp_client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_address = ('192.168.89.131', 12345)
     tcp_client_socket.connect(server_address)
 
-    # send the request over the TCP socket
     tcp_client_socket.send((request + " " + str(numClientes)).encode())
 
-    # close the TCP client socket
+
     tcp_client_socket.close()
 
 
